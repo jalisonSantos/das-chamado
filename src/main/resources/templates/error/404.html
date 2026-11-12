@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Não encontrado')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('')}"></nav>
+<main class="container py-5 text-center">
+  <h1 class="display-5">404</h1>
+  <p class="text-muted">A página ou o registro que você procura não foi encontrado.</p>
+  <a class="btn btn-primary" th:href="@{/}">Voltar ao início</a>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

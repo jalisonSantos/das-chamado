@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Técnicos')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('tecnicos')}"></nav>
+<main class="container py-4">
+  <h1 class="h3 mb-3" th:text="${id == null} ? 'Novo técnico' : 'Editar técnico'"></h1>
+  <form class="card shadow-sm p-4" method="post" th:object="${form}"
+        th:action="${id == null} ? @{/tecnicos} : @{/tecnicos/{id}(id=${id})}">
+    <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></div>
+      <div class="mb-3">
+        <label class="form-label" for="nome">Nome *</label>
+        <input class="form-control" id="nome" type="text" maxlength="120" th:field="*{nome}" th:errorclass="is-invalid">
+        <div class="invalid-feedback" th:errors="*{nome}"></div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="email">E-mail *</label>
+        <input class="form-control" id="email" type="email" maxlength="120" th:field="*{email}" th:errorclass="is-invalid">
+        <div class="invalid-feedback" th:errors="*{email}"></div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="especialidade">Especialidade</label>
+        <input class="form-control" id="especialidade" type="text" maxlength="80" th:field="*{especialidade}" th:errorclass="is-invalid">
+        <div class="invalid-feedback" th:errors="*{especialidade}"></div>
+      </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Salvar</button>
+      <a class="btn btn-outline-secondary" th:href="@{/tecnicos}">Cancelar</a>
+    </div>
+  </form>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
