@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Chamado')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('chamados')}"></nav>
+<main class="container py-4">
+  <div th:replace="~{fragments/layout :: mensagens}"></div>
+
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+      <h1 class="h3 mb-1" th:text="'#' + ${chamado.id} + ' ' + ${chamado.titulo}"></h1>
+      <span class="badge" th:classappend="'text-bg-' + ${chamado.status.cor}" th:text="${chamado.status.rotulo}"></span>
+      <span class="badge" th:classappend="'text-bg-' + ${chamado.prioridade.cor}" th:text="'Prioridade ' + ${chamado.prioridade.rotulo}"></span>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary" th:href="@{/chamados/{id}/editar(id=${chamado.id})}">Editar</a>
+      <a class="btn btn-outline-secondary" th:href="@{/chamados}">Voltar</a>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header bg-white fw-semibold">Descrição</div>
+        <div class="card-body descricao" th:text="${chamado.descricao}"></div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-header bg-white fw-semibold">Comentários (<span th:text="${#lists.size(chamado.comentarios)}">0</span>)</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" th:each="m : ${chamado.comentarios}">
+            <div class="d-flex justify-content-between">
+              <div>
+                <strong th:text="${m.autor}"></strong>
+                <span class="text-muted small ms-2" th:text="${#temporals.format(m.dataCriacao, 'dd/MM/yyyy HH:mm')}"></span>
+              </div>
+              <form method="post" th:action="@{/comentarios/{id}/excluir(id=${m.id})}" onsubmit="return confirm('Remover este comentário?')">
+                <button class="btn btn-sm btn-link text-danger p-0" type="submit">Remover</button>
+              </form>
+            </div>
+            <div class="descricao mt-1" th:text="${m.texto}"></div>
+          </li>
+          <li class="list-group-item text-muted text-center py-3" th:if="${#lists.isEmpty(chamado.comentarios)}">Nenhum comentário ainda.</li>
+        </ul>
+        <div class="card-body border-top">
+          <form method="post" th:object="${comentario}" th:action="@{/chamados/{id}/comentarios(id=${chamado.id})}">
+            <div class="mb-2">
+              <input class="form-control" type="text" maxlength="80" placeholder="Seu nome" th:field="*{autor}" required>
+            </div>
+            <div class="mb-2">
+              <textarea class="form-control" rows="3" maxlength="2000" placeholder="Escreva um comentário..." th:field="*{texto}" required></textarea>
+            </div>
+            <button class="btn btn-primary btn-sm" type="submit">Comentar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header bg-white fw-semibold">Detalhes</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><div class="small text-muted">Cliente</div><span th:text="${chamado.clienteNome}"></span></li>
+          <li class="list-group-item"><div class="small text-muted">Categoria</div><span th:text="${chamado.categoriaNome}"></span></li>
+          <li class="list-group-item"><div class="small text-muted">Técnico</div><span th:text="${chamado.tecnicoNome != null} ? ${chamado.tecnicoNome} : 'Não atribuído'"></span></li>
+          <li class="list-group-item"><div class="small text-muted">Aberto em</div><span th:text="${#temporals.format(chamado.dataAbertura, 'dd/MM/yyyy HH:mm')}"></span></li>
+        </ul>
+      </div>
+
+      <div class="card shadow-sm mb-3">
+        <div class="card-header bg-white fw-semibold">Alterar status</div>
+        <div class="card-body">
+          <form class="d-flex gap-2" method="post" th:action="@{/chamados/{id}/status(id=${chamado.id})}">
+            <select class="form-select" name="status">
+              <option th:each="s : ${statusList}" th:value="${s}" th:text="${s.rotulo}" th:selected="${s == chamado.status}"></option>
+            </select>
+            <button class="btn btn-outline-primary" type="submit">Atualizar</button>
+          </form>
+        </div>
+      </div>
+
+      <form method="post" th:action="@{/chamados/{id}/excluir(id=${chamado.id})}" onsubmit="return confirm('Excluir este chamado e seus comentários?')">
+        <button class="btn btn-outline-danger w-100" type="submit">Excluir chamado</button>
+      </form>
+    </div>
+  </div>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

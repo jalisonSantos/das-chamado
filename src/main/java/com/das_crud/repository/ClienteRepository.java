@@ -1,4 +1,7 @@
 package com.das_crud.repository;
 
-public interface ClienteRepository {
+import com.das_crud.model.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 }

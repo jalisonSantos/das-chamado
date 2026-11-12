@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Início')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('inicio')}"></nav>
+<main class="container py-4">
+  <h1 class="h3 mb-3">Painel</h1>
+  <div th:replace="~{fragments/layout :: mensagens}"></div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3" th:each="s : ${statusList}">
+      <a class="card shadow-sm h-100 stat-card" th:href="@{/chamados(status=${s})}">
+        <div class="card-body">
+          <span class="badge mb-2" th:classappend="'text-bg-' + ${s.cor}" th:text="${s.rotulo}"></span>
+          <div class="stat-number" th:text="${porStatus.get(s)}">0</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3"><a class="card shadow-sm stat-card" th:href="@{/chamados}"><div class="card-body"><div class="text-muted small">Total de chamados</div><div class="stat-number" th:text="${totalChamados}">0</div></div></a></div>
+    <div class="col-6 col-lg-3"><a class="card shadow-sm stat-card" th:href="@{/clientes}"><div class="card-body"><div class="text-muted small">Clientes</div><div class="stat-number" th:text="${totalClientes}">0</div></div></a></div>
+    <div class="col-6 col-lg-3"><a class="card shadow-sm stat-card" th:href="@{/tecnicos}"><div class="card-body"><div class="text-muted small">Técnicos</div><div class="stat-number" th:text="${totalTecnicos}">0</div></div></a></div>
+    <div class="col-6 col-lg-3"><a class="card shadow-sm stat-card" th:href="@{/categorias}"><div class="card-body"><div class="text-muted small">Categorias</div><div class="stat-number" th:text="${totalCategorias}">0</div></div></a></div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-white fw-semibold">Chamados recentes</div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex justify-content-between align-items-center" th:each="c : ${recentes}">
+        <div>
+          <a class="fw-semibold text-decoration-none" th:href="@{/chamados/{id}(id=${c.id})}" th:text="'#' + ${c.id} + ' ' + ${c.titulo}"></a>
+          <div class="small text-muted" th:text="${c.clienteNome} + ' · ' + ${c.categoriaNome}"></div>
+        </div>
+        <span class="badge" th:classappend="'text-bg-' + ${c.status.cor}" th:text="${c.status.rotulo}"></span>
+      </li>
+      <li class="list-group-item text-muted text-center py-4" th:if="${#lists.isEmpty(recentes)}">Nenhum chamado ainda.</li>
+    </ul>
+  </div>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Técnicos')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('tecnicos')}"></nav>
+<main class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Técnicos</h1>
+    <a class="btn btn-primary" th:href="@{/tecnicos/novo}">+ Novo técnico</a>
+  </div>
+  <div th:replace="~{fragments/layout :: mensagens}"></div>
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>Nome</th><th>E-mail</th><th>Especialidade</th><th class="text-end">Ações</th></tr></thead>
+        <tbody>
+          <tr th:each="x : ${itens}">
+            <td th:text="${x.nome}"></td><td th:text="${x.email}"></td><td th:text="${x.especialidade}"></td>
+            <td class="text-end text-nowrap">
+              <a class="btn btn-sm btn-outline-secondary" th:href="@{/tecnicos/{id}/editar(id=${x.id})}">Editar</a>
+              <form class="d-inline" method="post" th:action="@{/tecnicos/{id}/excluir(id=${x.id})}"
+                    onsubmit="return confirm('Excluir este registro?')">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(itens)}">
+            <td colspan="4" class="text-center text-muted py-4">Nenhum registro encontrado.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

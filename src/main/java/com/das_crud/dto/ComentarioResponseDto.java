@@ -1,4 +1,6 @@
 package com.das_crud.dto;
 
-public class ComentarioResponseDto {
+import java.time.LocalDateTime;
+
+public record ComentarioResponseDto(Long id, String autor, String texto, LocalDateTime dataCriacao) {
 }
